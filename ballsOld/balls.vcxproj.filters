@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Resources">
+      <UniqueIdentifier>{d8774550-c5f4-4e56-92c0-3023847b1184}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Resources\tpl">
+      <UniqueIdentifier>{9307f44f-f464-49ed-827b-62ba841e63df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\resources">
+      <UniqueIdentifier>{30cea095-ff44-4f6e-be9d-b9d208d86aa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\objects">
+      <UniqueIdentifier>{a879cc04-9771-4575-a45c-79c2e43b2aeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\animation">
+      <UniqueIdentifier>{7a39c697-8b68-41a1-a679-6297da6de71c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\animation">
+      <UniqueIdentifier>{8d81a79b-2f0a-47ef-867d-694e16779662}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gameStates">
+      <UniqueIdentifier>{ee69fca4-bcd8-4490-a254-da3e9c09e40b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\gameStates">
+      <UniqueIdentifier>{fef5de8e-c34e-46c4-b90c-a95acf9ee111}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Assets\textures">
+      <UniqueIdentifier>{b49b66a6-b136-4c1f-b0f0-4451c3440b3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\textures\backgrounds">
+      <UniqueIdentifier>{f154d92d-163f-40c3-9674-41b52a240f77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\textures\player">
+      <UniqueIdentifier>{68e1bf77-ad45-485c-a64c-c575a0eec415}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\textures\tilesets">
+      <UniqueIdentifier>{a42bec8c-28e6-42b9-a59b-d00810eb78e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\objects\player">
+      <UniqueIdentifier>{883db11e-2588-4eb0-a491-28f5a1333231}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\objects">
+      <UniqueIdentifier>{a80d219c-b9bb-4b77-b7b7-a67b5fd64cf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\objects\player">
+      <UniqueIdentifier>{8011b933-ca56-44d7-982a-46f15f651fb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\physics">
+      <UniqueIdentifier>{9bb6b65d-add5-4924-8a75-add347fe6bcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\physics">
+      <UniqueIdentifier>{20a22686-258c-4532-9a14-3b9ebbe6df4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\tilemap">
+      <UniqueIdentifier>{21a896e1-25b7-4088-9efd-f8011942adad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\tilemap">
+      <UniqueIdentifier>{479c99fb-5d9e-4b26-8d6e-3d08490429ae}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\resources\Cfg.cpp">
+      <Filter>Source Files\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="source\objects\GameObject.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="source\animation\Animation.cpp">
+      <Filter>Source Files\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="source\animation\Animator.cpp">
+      <Filter>Source Files\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="source\animation\AnimSet.cpp">
+      <Filter>Source Files\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="source\objects\DynamicObject.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="source\objects\InvisibleObject.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="SandboxState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameStates\GameState.cpp">
+      <Filter>Source Files\gameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="source\objects\player\Player.cpp">
+      <Filter>Source Files\objects\player</Filter>
+    </ClCompile>
+    <ClCompile Include="source\physics\RigidBody.cpp">
+      <Filter>Source Files\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\tilemap\Tile.cpp">
+      <Filter>Source Files\tilemap</Filter>
+    </ClCompile>
+    <ClCompile Include="source\tilemap\Tilemap.cpp">
+      <Filter>Source Files\tilemap</Filter>
+    </ClCompile>
+    <ClCompile Include="source\tilemap\Tileset.cpp">
+      <Filter>Source Files\tilemap</Filter>
+    </ClCompile>
+    <ClCompile Include="source\objects\StaticObject.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\resources\Cfg.h">
+      <Filter>Header Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="source\resources\ResourceManager.h">
+      <Filter>Header Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="source\animation\Animation.h">
+      <Filter>Header Files\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="source\animation\Animator.h">
+      <Filter>Header Files\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="source\animation\AnimSet.h">
+      <Filter>Header Files\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="SandboxState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameStates\GameState.h">
+      <Filter>Header Files\gameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="source\objects\player\Player.h">
+      <Filter>Header Files\objects\player</Filter>
+    </ClInclude>
+    <ClInclude Include="source\objects\DynamicObject.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="source\objects\InvisibleObject.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="source\physics\RigidBody.h">
+      <Filter>Header Files\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\tilemap\Tile.h">
+      <Filter>Header Files\tilemap</Filter>
+    </ClInclude>
+    <ClInclude Include="source\tilemap\Tilemap.h">
+      <Filter>Header Files\tilemap</Filter>
+    </ClInclude>
+    <ClInclude Include="source\tilemap\Tileset.h">
+      <Filter>Header Files\tilemap</Filter>
+    </ClInclude>
+    <ClInclude Include="source\objects\StaticObject.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="source\resources\tpl\ResourceManager.tpl">
+      <Filter>Header Files\Resources\tpl</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\textures\invariant.png">
+      <Filter>Assets\textures</Filter>
+    </Image>
+    <Image Include="assets\textures\player\playerAtlas.png">
+      <Filter>Assets\textures\player</Filter>
+    </Image>
+    <Image Include="assets\textures\tilesets\tileset1_50x50.png">
+      <Filter>Assets\textures\tilesets</Filter>
+    </Image>
+    <Image Include="assets\textures\backgrounds\game_start_bg.jpg">
+      <Filter>Assets\textures\backgrounds</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="source\objects\GameObject.h">
+      <Filter>Header Files\objects</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

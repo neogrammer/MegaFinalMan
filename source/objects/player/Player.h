@@ -1,0 +1,16 @@
+#ifndef PLAYER_H__
+#define PLAYER_H__
+#include "../DynamicObject.h"
+#include "../../resources/Cfg.h"
+class Player : public DynamicObject
+{
+public:
+	Player();
+	~Player() override final;
+	void update(float gameTime_) override final;
+
+	void setDir(std::string dir_);
+};
+
+
+#endif
