@@ -5,6 +5,7 @@ struct BoundingBox
 {
 	float w, h;
 	float offx, offy;
+	// hello
 };
 
 #endif
