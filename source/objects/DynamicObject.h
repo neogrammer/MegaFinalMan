@@ -29,6 +29,7 @@ public:
 	sf::Vector2f getFrameSize();
 	sf::Vector2f getBBoxSize();
 	sf::Vector2f getTexOffset();
+	inline Animator& getAnimator() { return animator; }
 
 	inline RigidBody& getRigid() {
 		return rigidBody;
