@@ -6,6 +6,8 @@
 #include "source/resources/Cfg.h"
 #include "source/tilemap/Tilemap.h"
 class Player;
+class Tile;
+class Tilemap;
 class SandboxState : public GameState
 {
 	std::unique_ptr<Player> player;
@@ -21,7 +23,7 @@ public:
 	SandboxState();
 	~SandboxState() override final;
 
-	virtual void Update(float gameTime_);
+	virtual void Update(float gameTime_, sf::RenderWindow& wnd);
 	virtual void Render(sf::RenderWindow& wnd);
 	virtual void ProcessInputStates();
 	virtual void UpdateFixed(float gameTime_);

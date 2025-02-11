@@ -1,32 +1,62 @@
 #include "RigidBody.h"
+#include "../objects/GameObject.h"
 #include "../objects/DynamicObject.h"
+#include "../objects/StaticObject.h"
 
-RigidBody::RigidBody(DynamicObject* dyno_, sf::Vector2f pos_, sf::Vector2f vel_)
+RigidBody::RigidBody(GameObject* dyno_, sf::Vector2f pos_, sf::Vector2f vel_)
 	: owner{dyno_}
 	, aabb{}
 	, velx{vel_.x}, vely{vel_.y}
 {
 	posx = pos_.x;
 	posy = pos_.y;
-	auto& anims = owner->animator.getAnims().getAnims();
-	for (auto& animTri : owner->animator.getAnims().getAnims())
+	DynamicObject* dyno = dynamic_cast<DynamicObject*>(owner);
+	if (dyno)
 	{
-		aabb[animTri.first] = std::unordered_map<std::string, std::vector<BoundingBox>>{};
-		aabb[animTri.first].clear();
-		for (auto& anim : animTri.second)
+		auto& anims = dyno->animator.getAnims().getAnims();
+		for (auto& animTri : dyno->animator.getAnims().getAnims())
 		{
-			anim.second.getDirType();
-			aabb[animTri.first] = {};
+			aabb[animTri.first] = std::unordered_map<std::string, std::vector<BoundingBox>>{};
 			aabb[animTri.first].clear();
-			aabb.at(animTri.first)[anim.second.getDirType()] = std::vector<BoundingBox>{};
-			aabb.at(animTri.first)[anim.second.getDirType()].clear();
-			aabb.at(animTri.first)[anim.second.getDirType()].reserve(anim.second.getRects().size());
-			for (int i = 0; i < anim.second.getRects().size(); i++)
+			for (auto& anim : animTri.second)
 			{
-				aabb.at(animTri.first)[anim.second.getDirType()].push_back(BoundingBox{ (float)anim.second.getRect(i).width, (float)anim.second.getRect(i).height, (float)anim.second.getTexOffset(i).x, (float)anim.second.getTexOffset(i).y });
+				anim.second.getDirType();
+				aabb[animTri.first] = {};
+				aabb[animTri.first].clear();
+				aabb.at(animTri.first)[anim.second.getDirType()] = std::vector<BoundingBox>{};
+				aabb.at(animTri.first)[anim.second.getDirType()].clear();
+				aabb.at(animTri.first)[anim.second.getDirType()].reserve(anim.second.getRects().size());
+				for (int i = 0; i < anim.second.getRects().size(); i++)
+				{
+					aabb.at(animTri.first)[anim.second.getDirType()].push_back(BoundingBox{ (float)anim.second.getRect(i).width, (float)anim.second.getRect(i).height, (float)anim.second.getTexOffset(i).x, (float)anim.second.getTexOffset(i).y });
+				}
 			}
 		}
 	}
+	/*else
+	{
+		StaticObject* stat = dynamic_cast<StaticObject*>(owner);
+		if (stat)
+		{
+
+			stat->getBBox() = BoundingBox{this->getBBox().w,getBBox().h, getBBox().offx, getBBox().offy};
+				aabb[animTri.first].clear();
+				for (auto& anim : animTri.second)
+				{
+					anim.second.getDirType();
+					aabb[animTri.first] = {};
+					aabb[animTri.first].clear();
+					aabb.at(animTri.first)[anim.second.getDirType()] = std::vector<BoundingBox>{};
+					aabb.at(animTri.first)[anim.second.getDirType()].clear();
+					aabb.at(animTri.first)[anim.second.getDirType()].reserve(anim.second.getRects().size());
+					for (int i = 0; i < anim.second.getRects().size(); i++)
+					{
+						aabb.at(animTri.first)[anim.second.getDirType()].push_back(BoundingBox{ (float)anim.second.getRect(i).width, (float)anim.second.getRect(i).height, (float)anim.second.getTexOffset(i).x, (float)anim.second.getTexOffset(i).y });
+					}
+				}
+			}
+		}*/
+	//}
 }
 
 RigidBody::~RigidBody()
@@ -34,18 +64,19 @@ RigidBody::~RigidBody()
 
 BoundingBox RigidBody::getBBox()
 {
-	auto found = aabb.find(owner->animator.getCurrID());
+	DynamicObject* dyno = dynamic_cast<DynamicObject*>(owner);
+	auto found = aabb.find(dyno->animator.getCurrID());
 	if (found != aabb.end())
 	{ 
-		auto foundd = aabb.at(found->first).find(owner->animator.getCurrDir());
+		auto foundd = aabb.at(found->first).find(dyno->animator.getCurrDir());
 		if (foundd != aabb.at(found->first).end())
 		{
-			if (owner->animator.getCurrIndex() >= foundd->second.size())
+			if (dyno->animator.getCurrIndex() >= foundd->second.size())
 			{
-				owner->animator.setCurrIndex(0);
+				dyno->animator.setCurrIndex(0);
 			}
 
-			return aabb.at(found->first).at(foundd->first).at(owner->animator.getCurrIndex());
+			return aabb.at(found->first).at(foundd->first).at(dyno->animator.getCurrIndex());
 
 		}
 	}
@@ -132,9 +163,11 @@ void RigidBody::setTexOffset(sf::Vector2f offset_, std::string animName_, std::s
 void RigidBody::setRigidBody()
 {
 
-	auto& anims = owner->animator.getAnims().getAnims();
+	DynamicObject* dyno = dynamic_cast<DynamicObject*>(owner);
+
+	auto& anims = dyno->animator.getAnims().getAnims();
 	// load all current tex rects from the animations for each direction each anim set has and load them into parallel map here for aabb collision detection
-	for (auto& animTri : owner->animator.getAnims().getAnims())
+	for (auto& animTri : dyno->animator.getAnims().getAnims())
 	{
 		aabb[animTri.first] = std::unordered_map<std::string, std::vector<BoundingBox>>{};
 		aabb[animTri.first].clear();

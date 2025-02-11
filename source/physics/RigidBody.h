@@ -5,17 +5,17 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
-class DynamicObject;
+class GameObject;
 class RigidBody
 {
 	friend class AnimSet;
-	DynamicObject* owner;
+	GameObject* owner;
 	float posx{}, posy{};
 	float velx{}, vely{};
 	std::unordered_map<std::string, std::unordered_map<std::string, std::vector<BoundingBox>> > aabb;
 public:
 	RigidBody() = delete;
-	RigidBody(DynamicObject* dyno_, sf::Vector2f pos_={ 0.f,0.f }, sf::Vector2f vel_ = { 0.f,0.f });
+	RigidBody(GameObject* dyno_, sf::Vector2f pos_={ 0.f,0.f }, sf::Vector2f vel_ = { 0.f,0.f });
 	~RigidBody();
 
 	BoundingBox getBBox();

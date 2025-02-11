@@ -23,7 +23,7 @@ std::unique_ptr<sf::Sprite> DynamicObject::sprite()
 	pass = std::make_unique<sf::Sprite>();
 	pass->setTexture(getTex());
 	pass->setTextureRect(animator.getFrame());
-	pass->setPosition(rigidBody.getPosition());
+	pass->setPosition({ rigidBody.getPosition().x - rigidBody.getTexOffset(animator.getCurrID(), animator.getCurrDir(), animator.getCurrIndex()).x,rigidBody.getPosition().y - rigidBody.getTexOffset(animator.getCurrID(), animator.getCurrDir(), animator.getCurrIndex()).y });
 	return std::move(pass);
 }
 

@@ -9,7 +9,11 @@
 #include "../tilemap/Tile.h"
 class Physics {
 public:
+    static sf::Vector2f mpos;
+
     Physics() = delete; // Prevent instantiation
+
+    static void updateMouse(sf::RenderWindow& wnd);
 
     // AABB collision check
     static bool checkCollision(const BoundingBox& a, sf::Vector2f posA, const BoundingBox& b, sf::Vector2f posB) {
@@ -75,6 +79,23 @@ public:
         obj.setPosition(newPos);
 //        resolveCollision(obj, tilemap);
     }
+
+    static bool PointVsStat(sf::Vector2f p, StaticObject& o);
+    static bool RayVsBBox(sf::Vector2f rayOrigin_, sf::Vector2f rayDir_,const BoundingBox b_, sf::Vector2f targetPos_, sf::Vector2f& cp_, sf::Vector2f& cn_, float& ct_);
+    static bool BBoxVsBBox(BoundingBox b1, sf::Vector2f pos1, BoundingBox& b2, sf::Vector2f pos2);
+    static bool BBoxVsBBox(float& x_, float& y_, sf::Vector2f size_, BoundingBox& b2_);
+    static bool DynoVsBBox(DynamicObject& dyno_, BoundingBox& b_, sf::Vector2f& cp_, sf::Vector2f& cn_, sf::Vector2f& ct_, float gameTime_);
+    static bool DynoVsStatic(DynamicObject& dyno_, StaticObject& s_, sf::Vector2f& cp_, sf::Vector2f& cn_, float& ct_, float gameTime_);
+    static bool DynoVsDyno(DynamicObject& dyno_, DynamicObject& dyno2_, sf::Vector2f& cp_, sf::Vector2f& cn_, sf::Vector2f& ct_, float gameTime_);
+    static bool DynoVsRigid(DynamicObject& dyno_, RigidBody& rb_, sf::Vector2f& cp_, sf::Vector2f& cn_, sf::Vector2f& ct_, float gameTime_);
+    static bool StatVsStat(StaticObject& stat_, StaticObject& stat2_);
+    static bool StatVsRigid(StaticObject& stat_, RigidBody& rb_);
+    static bool StatVsBBox(StaticObject& stat_, BoundingBox& b_);
+
+
+
+
+
 };
 
 #endif // PHYSICS_H__

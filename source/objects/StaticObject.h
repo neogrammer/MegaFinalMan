@@ -4,7 +4,7 @@
 #include "../animation/Animator.h"
 #include "../resources/Cfg.h"
 
-#include "../physics/BoundingBox.h"
+#include "../physics/RigidBody.h"
 class StaticObject : public GameObject
 {
 protected:
@@ -25,6 +25,8 @@ public:
 	std::unique_ptr<sf::Sprite> sprite();
 	void setPosition(sf::Vector2f pos_);
 	sf::Vector2f getPosition();
+	inline float& posxRef() { return posx; }
+	inline float& posyRef() { return posy; }
 	void setSize(sf::Vector2f size_);
 	sf::Vector2f getSize();
 	sf::IntRect getTexRect();

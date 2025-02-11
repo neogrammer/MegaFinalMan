@@ -21,7 +21,7 @@ std::vector<Tile*> Tilemap::getVisibleTiles()
 	tmp.reserve(this->tiles.size());
 	for (int i = 0; i < this->tiles.size(); i++)
 	{
-		if (!tiles[i]->isEmpty())
+		if (!(tiles[i]->empty))
 			tmp.push_back(tiles[i].get());
 	}
 	tmp.shrink_to_fit();

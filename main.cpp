@@ -13,7 +13,7 @@ int UnloadProgram();
 int InitProgram();
 int HandleEvent(const std::optional<sf::Event> evt_);
 int ProcessStateInput(float gameTime_);
-int Update(float gameTime_);
+int Update(float gameTime_, sf::RenderWindow& wnd_);
 void UpdateFixed(float gameTime_);
 int RenderScene(sf::RenderWindow& wnd_);
 
@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
 
 	sboxState = std::make_unique<SandboxState>();
 	
-	sf::RenderWindow gwnd(sf::VideoMode({ 800, 600 }), "My window", sf::Style::None);
+	sf::RenderWindow gwnd(sf::VideoMode({ 800, 600 }), "My window", sf::Style::Fullscreen);
 
 	int result = InitProgram();
 
@@ -50,15 +50,16 @@ int main(int argc, char* argv[])
 				break;
 			}
 		}
-
 		auto gameTime = gtimer.restart().asSeconds();
-		result = ProcessStateInput(gameTime);
-		if (result >= 0) { return result; }
+		if (gwnd.isOpen())
+		{
+			result = ProcessStateInput(gameTime);
+			if (result >= 0) { return result; }
 
 
-		result = Update(gameTime);
-		if (result >= 0) { return result; }
-		
+			result = Update(gameTime, gwnd);
+			if (result >= 0) { return result; }
+		}
 		
 
 		if (gwnd.isOpen())
@@ -100,9 +101,9 @@ int ProcessStateInput(float gameTime_)
 	return -3;
 }
 
-int Update(float gameTime_)
+int Update(float gameTime_, sf::RenderWindow& wnd_)
 {
-	sboxState->Update(gameTime_);
+	sboxState->Update(gameTime_, wnd_);
 	return -4;
 }
 
