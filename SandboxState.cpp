@@ -28,9 +28,9 @@ SandboxState::SandboxState()
 		-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 		-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 		-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-		-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-		-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-		-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+		-1,-1,-1,-1,-1,-1,-1,-1,-1,06,06,06,06,-1,-1,-1,
+		-1,-1,-1,-1,-1,-1,-1,-1,06,06,-1,-1,-1,-1,06,-1,
+		-1,-1,-1,-1,-1,-1,-1,-1,06,06-1,-1,-1,-1,06,-1,
 		06,06,06,06,06,06,06,06,06,06,06,06,06,06,06,06
 	};
 
@@ -79,7 +79,10 @@ void SandboxState::UpdateFixed(float gameTime_)
 	Physics::applyGravity(*player, gameTime_);
 	Physics::applyMovement(*player, gameTime_, tilemap);
 
-	for (auto* t : tilemap.getVisibleTiles())
+	
+	
+	
+	/*for (auto* t : tilemap.getVisibleTiles())
 	{
 		sf::Vector2f cp, cn;
 		float ct;
@@ -87,7 +90,7 @@ void SandboxState::UpdateFixed(float gameTime_)
 		{
 			std::cout << "Collided" << std::endl;
 		}
-	}
+	}*/
 	//Physics::resolveCollision(*player, tilemap);
 	player->updateAnimState();
 }

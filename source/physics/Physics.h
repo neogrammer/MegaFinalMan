@@ -77,7 +77,12 @@ public:
         sf::Vector2f velocity = obj.getVelocity();
         sf::Vector2f newPos = obj.getPosition() + velocity * deltaTime;
         obj.setPosition(newPos);
-//        resolveCollision(obj, tilemap);
+        auto tiles = tilemap.getVisibleTiles();
+        sf::Vector2f cn, cp;
+        float ct;
+
+        bool moved;
+        Physics::DynoVsTiles(obj, tiles, cp, cn, ct, deltaTime, moved);
     }
 
     static bool PointVsStat(sf::Vector2f p, StaticObject& o);
@@ -86,6 +91,7 @@ public:
     static bool BBoxVsBBox(float& x_, float& y_, sf::Vector2f size_, BoundingBox& b2_);
     static bool DynoVsBBox(DynamicObject& dyno_, BoundingBox& b_, sf::Vector2f& cp_, sf::Vector2f& cn_, sf::Vector2f& ct_, float gameTime_);
     static bool DynoVsStatic(DynamicObject& dyno_, StaticObject& s_, sf::Vector2f& cp_, sf::Vector2f& cn_, float& ct_, float gameTime_);
+    static void DynoVsTiles(DynamicObject& dyno_, std::vector<Tile*>& s_, sf::Vector2f& cp_, sf::Vector2f& cn_, float& ct_, float gameTime_,bool& moved_);
     static bool DynoVsDyno(DynamicObject& dyno_, DynamicObject& dyno2_, sf::Vector2f& cp_, sf::Vector2f& cn_, sf::Vector2f& ct_, float gameTime_);
     static bool DynoVsRigid(DynamicObject& dyno_, RigidBody& rb_, sf::Vector2f& cp_, sf::Vector2f& cn_, sf::Vector2f& ct_, float gameTime_);
     static bool StatVsStat(StaticObject& stat_, StaticObject& stat2_);

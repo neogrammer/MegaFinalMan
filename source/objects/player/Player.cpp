@@ -36,7 +36,7 @@ void Player::update(float gameTime_)
 			{
 				queueAnim("Run");
 			}
-			setVelocity({ 300.f, getVelocity().y });
+			setVelocity({ 150.f, getVelocity().y });
 			//setPosition({ getPosition().x + 300.f * gameTime_, getPosition().y });
 			setDir("Right");
 		}
@@ -46,7 +46,7 @@ void Player::update(float gameTime_)
 			{
 				queueAnim("Run");
 			}
-			setVelocity({ -300.f, getVelocity().y});
+			setVelocity({ -150.f, getVelocity().y});
 			//setPosition({ getPosition().x - 300.f * gameTime_, getPosition().y });
 			setDir("Left");
 		}

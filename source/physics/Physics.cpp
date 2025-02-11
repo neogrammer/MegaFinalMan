@@ -1,4 +1,6 @@
 #include "Physics.h"
+#include <algorithm>
+#include <functional>
 
 sf::Vector2f Physics::mpos = {0.f,0.f};
 
@@ -137,18 +139,164 @@ bool Physics::DynoVsStatic(DynamicObject& dyno_, StaticObject& s_, sf::Vector2f&
 
     if (RayVsBBox({ dyno_.getPosition().x + dyno_.getBBoxSize().x / 2.f, dyno_.getPosition().y + dyno_.getBBoxSize().y / 2.f }, { dyno_.getVelocity().x * gameTime_, dyno_.getVelocity().y * gameTime_ }, rBox, { expanded_target.x, expanded_target.y }, cp_, cn_, ct_))
     {
+
+        //float overlapX = std::min((dyno_.getPosition().x + dyno_.BBoxWidth()) - expanded_target.x,
+        //    (expanded_target.x + rBox.w) - dyno_.getPosition().x);
+        //float overlapY = std::min((dyno_.getPosition().y + dyno_.BBoxHeight()) - expanded_target.y,
+        //    (expanded_target.y + rBox.h) - dyno_.getPosition().y);
+
+        //if (overlapX < overlapY) {
+        //    // Push out horizontally
+        //    if (dyno_.getPosition().x < expanded_target.x)
+        //    {
+        //        dyno_.getRigid().getX() -= overlapX;
+        //    }
+        //    else
+        //    {
+        //        dyno_.getRigid().getX() += overlapX;
+        //    }
+        //}
+        //else {
+        //    std::cout << "Colliding with ground" << std::endl;
+        //    // Push out vertically
+        //    if (dyno_.getRigid().getY() < expanded_target.y)
+        //    {
+        //        dyno_.getRigid().getY() -= overlapY;
+        //    }
+        //    else
+        //    {
+        //        dyno_.getRigid().getY() += overlapY;
+        //    }
+        //}
+
         if (ct_ <= 1.0f)
         {
-            if (cn_.y == -1.f)
+            return true;
+        /*    if (cn_.y == -1.f)
             {
                 dyno_.setVelocity({ dyno_.getVelocity().x, 0.f });
                 dyno_.setPosition({ x1, y2 - h1 });
             }
-            return true;
+            if (cn_.y == 1.f)
+            {
+                dyno_.setVelocity({ dyno_.getVelocity().x, 0.f });
+                dyno_.setPosition({ x1, y2 });
+            }
+            if (cn_.x == -1.f)
+            {
+                if (cn_.y == 0.f)
+                {
+                    dyno_.setVelocity({ 0.f, dyno_.getVelocity().y });
+                    dyno_.setPosition({ x2 - w1, y1 });
+                }
+            }
+            if (cn_.x == 1.f)
+            {
+                if (cn_.y == 0.f)
+                {
+                    dyno_.setVelocity({ 0.f, dyno_.getVelocity().y });
+                    dyno_.setPosition({ x2, y1 });
+                }
+            }*/
+       
         }
     }
 
     return false;
+}
+
+void Physics::DynoVsTiles(DynamicObject& dyno_, std::vector<Tile*>& s_, sf::Vector2f& cp_, sf::Vector2f& cn_, float& ct_, float gameTime_, bool& moved_)
+{
+    moved_ = false;
+    std::vector<std::pair<Tile*, float> > z;
+    for (auto& tile : s_)
+    {
+        sf::Vector2f cp, cn;
+        float ct;
+
+        if (DynoVsStatic(dyno_, *tile, cp, cn, ct, gameTime_))
+        {
+            z.push_back(std::pair{ tile, ct});
+        }
+    }
+
+    std::sort(z.begin(), z.end(), [](const std::pair<Tile*,float>& a, const std::pair<Tile*, float>& b) {
+        return a.second < b.second;
+        });
+
+    for (int i = 0; i < z.size(); i++)
+    {
+        sf::Vector2f cp, cn;
+        float ct;
+        float widthPad = 20.f;
+        float heightPad = 20.f;
+
+        if (DynoVsStatic(dyno_, *z[i].first, cp, cn, ct, gameTime_))
+        {
+            float overlapX = std::min((dyno_.getPosition().x + dyno_.BBoxWidth()) - z[i].first->posxRef(),
+                (z[i].first->posxRef() + z[i].first->getBBox().w) - dyno_.getPosition().x);
+            float overlapY = std::min((dyno_.getPosition().y + dyno_.BBoxHeight()) - z[i].first->posyRef(),
+                (z[i].first->posyRef() + z[i].first->getBBox().h) - dyno_.getPosition().y);
+
+            if (overlapX < overlapY) {
+
+                // make sure the y overlap is greater than the padding
+                if (overlapY < heightPad)
+                {
+                    cn.y = 0.f;
+                    //// Push out horizontally
+                    //if (dyno_.getPosition().x < z[i].first->posxRef())
+                    //{
+                    //    dyno_.getRigid().getX() -= overlapX;
+                    //}
+                    //else
+                    //{
+                    //    dyno_.getRigid().getX() += overlapX;
+                    //}
+                }
+            }
+            else {
+
+                // make sure the y overlap is greater than the padding
+                if (overlapX < widthPad)
+                {
+                    cn.x = 0.f;
+                    //std::cout << "Colliding with ground" << std::endl;
+                    //// Push out vertically
+                    //if (dyno_.getRigid().getY() < z[i].first->posyRef())
+                    //{
+                    //    dyno_.getRigid().getY() -= overlapY;
+                    //}
+                    //else
+                    //{
+                    //    dyno_.getRigid().getY() += overlapY;
+                    //}
+                }
+            }
+
+            sf::Vector2f cnVel = dyno_.getVelocity();
+
+
+            dyno_.setVelocity({ dyno_.getVelocity().x + (cn.x * (abs(dyno_.getVelocity().x) * (1 - ct))),
+                dyno_.getVelocity().y + (cn.y * (abs(dyno_.getVelocity().y) * (1 - ct))) });
+            dyno_.setPosition({ dyno_.getPosition().x + dyno_.getVelocity().x * gameTime_, dyno_.getPosition().y + dyno_.getVelocity().y * gameTime_ });
+            if (((dyno_.getVelocity().x < 0.f) && (cnVel.x > 0.f)) || ((dyno_.getVelocity().x > 0.f) && (cnVel.x < 0.f)))
+            {
+                // bouncing, lets stop that
+                dyno_.setVelocity({ 0.f, dyno_.getVelocity().y });
+            }
+            if (((dyno_.getVelocity().y < 0.f) && (cnVel.y > 0.f)) || ((dyno_.getVelocity().y > 0.f) && (cnVel.y < 0.f)))
+            {
+                // bouncing, lets stop that
+                dyno_.setVelocity({ dyno_.getVelocity().x, 0.f });
+            }
+            moved_ = true;
+        }
+    }
+    //if (collided)
+    //{
+    //    dyno_.setPosition({ dyno_.getPosition().x + dyno_.getVelocity().x, dyno_.getPosition().y });
+    //}
 }
 
 bool Physics::DynoVsDyno(DynamicObject& dyno_, DynamicObject& dyno2_, sf::Vector2f& cp_, sf::Vector2f& cn_, sf::Vector2f& ct_, float gameTime_)
