@@ -241,7 +241,7 @@ void Physics::DynoVsTiles(DynamicObject& dyno_, std::vector<Tile*>& s_, sf::Vect
             if (overlapX < overlapY) {
 
                 // make sure the y overlap is greater than the padding
-                if (overlapY < heightPad)
+                if (overlapY > heightPad)
                 {
                     cn.y = 0.f;
                     //// Push out horizontally
@@ -258,7 +258,7 @@ void Physics::DynoVsTiles(DynamicObject& dyno_, std::vector<Tile*>& s_, sf::Vect
             else {
 
                 // make sure the y overlap is greater than the padding
-                if (overlapX < widthPad)
+                if (overlapX > widthPad)
                 {
                     cn.x = 0.f;
                     //std::cout << "Colliding with ground" << std::endl;
@@ -279,7 +279,7 @@ void Physics::DynoVsTiles(DynamicObject& dyno_, std::vector<Tile*>& s_, sf::Vect
 
             dyno_.setVelocity({ dyno_.getVelocity().x + (cn.x * (abs(dyno_.getVelocity().x) * (1 - ct))),
                 dyno_.getVelocity().y + (cn.y * (abs(dyno_.getVelocity().y) * (1 - ct))) });
-            dyno_.setPosition({ dyno_.getPosition().x + dyno_.getVelocity().x * gameTime_, dyno_.getPosition().y + dyno_.getVelocity().y * gameTime_ });
+            dyno_.setPosition({ dyno_.getPosition().x + dyno_.getVelocity().x * gameTime_ + 1.f * cn.x, dyno_.getPosition().y + dyno_.getVelocity().y * gameTime_ });
             if (((dyno_.getVelocity().x < 0.f) && (cnVel.x > 0.f)) || ((dyno_.getVelocity().x > 0.f) && (cnVel.x < 0.f)))
             {
                 // bouncing, lets stop that
