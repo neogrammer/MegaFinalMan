@@ -12,7 +12,7 @@ protected:
 	Animator animator;
 	Cfg::Textures currTex;
 	RigidBody rigidBody;
-	
+	sf::Vector2f lastCollisionNormal = { 0.f, 0.f };
 public:
 	DynamicObject(Cfg::Textures tex_ = Cfg::Textures::Invariant, sf::Vector2f size_ = sf::Vector2f{ 50.f,50.f }, sf::Vector2f pos_ = sf::Vector2f{ 0.f,0.f });
 	virtual ~DynamicObject() override;
@@ -34,6 +34,9 @@ public:
 	inline RigidBody& getRigid() {
 		return rigidBody;
 	}
+
+	void setLastCollisionNormal(const sf::Vector2f& normal) { lastCollisionNormal = normal; }
+	sf::Vector2f getLastCollisionNormal() const { return lastCollisionNormal; }
 
 	std::string getCurrAnimID();
 	void queueAnim(std::string id_);

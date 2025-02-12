@@ -6,11 +6,12 @@
 #include "../objects/DynamicObject.h"
 #include "../tilemap/Tilemap.h"
 #include <iostream>
+#include <tuple>
 #include "../tilemap/Tile.h"
 class Physics {
 public:
     static sf::Vector2f mpos;
-
+    static std::vector<std::tuple<Tile*, float, sf::Vector2f, sf::Vector2f>> collisions;
     Physics() = delete; // Prevent instantiation
 
     static void updateMouse(sf::RenderWindow& wnd);
