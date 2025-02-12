@@ -78,12 +78,9 @@ public:
         sf::Vector2f velocity = obj.getVelocity();
         sf::Vector2f newPos = obj.getPosition() + velocity * deltaTime;
         obj.setPosition(newPos);
-        auto tiles = tilemap.getVisibleTiles();
-        sf::Vector2f cn, cp;
-        float ct;
 
-        bool moved;
-        Physics::DynoVsTiles(obj, tiles, cp, cn, ct, deltaTime, moved);
+
+        //Physics::DynoVsTiles(obj, tiles, cp, cn, ct, deltaTime, moved);
     }
 
     static bool PointVsStat(sf::Vector2f p, StaticObject& o);

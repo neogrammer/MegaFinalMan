@@ -60,8 +60,18 @@ void SandboxState::ProcessInputStates()
 
 void SandboxState::UpdateFixed(float gameTime_)
 {
+	static bool moved{ false };
 	Physics::applyGravity(*player, gameTime_);
-	Physics::applyMovement(*player, gameTime_, tilemap);
+
+	if (!moved)
+		Physics::applyMovement(*player, gameTime_, tilemap);
+	
+	sf::Vector2f cn, cp;
+	float ct;
+	auto vec = tilemap.getVisibleTiles();
+	moved = false;
+	Physics::DynoVsTiles(*player, vec , cp, cn, ct, gameTime_, moved);
+
 	player->updateAnimState();
 }
 

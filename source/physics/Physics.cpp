@@ -270,12 +270,11 @@ void Physics::DynoVsTiles(DynamicObject& dyno_, std::vector<Tile*>& s_, sf::Vect
     {
         //sf::Vector2f cp, cn;
         //float ct;
-        
+        ct = 1.f;
         if (DynoVsStatic(dyno_, *tile, cp, cn, ct, gameTime_))
         {
             std::cout << "YUP" << std::endl;
             collisions.emplace_back(std::tuple<Tile*, float, sf::Vector2f, sf::Vector2f>{tile, ct, cp, cn});
-            ct = 1.f;
         }
     }
 
@@ -289,7 +288,8 @@ void Physics::DynoVsTiles(DynamicObject& dyno_, std::vector<Tile*>& s_, sf::Vect
     sf::Vector2f strongestNormal = { 0.f, 0.f };
     float minDot = 1.0f;  // Track the most perpendicular normal
     float bestCt = 1.0f;  // Store the smallest contact time
-   
+    Tile* CurrTile{ nullptr };
+    
     sf::Vector2f  cpOut{};
     for (auto& [tile, ct, cp, cn] : collisions)
     {
@@ -333,6 +333,7 @@ void Physics::DynoVsTiles(DynamicObject& dyno_, std::vector<Tile*>& s_, sf::Vect
             strongestNormal = cn;
             bestCt = std::max(0.0f, std::min(ct, 1.0f));  // Clamp between 0 and 1
             cpOut = cp;
+            CurrTile = tile;
         }
 
 
@@ -355,16 +356,17 @@ void Physics::DynoVsTiles(DynamicObject& dyno_, std::vector<Tile*>& s_, sf::Vect
     }
     // Stop movement along the strongest normal
     sf::Vector2f newVelocity = dyno_.getVelocity();
-    if (strongestNormal.y < 0) { // Standing on the ground
+    if (strongestNormal.y < 0 && CurrTile != nullptr) { // Standing on the ground
         newVelocity.y = 0;
 
         // 🚀 Fix for teleporting too far up - prevent overshooting!
-        float correctedY = cpOut.y - dyno_.BBoxHeight();
+        float correctedY = CurrTile->getPosition().y - dyno_.BBoxHeight() / 2.f;
         if (dyno_.getPosition().y > correctedY) {
             dyno_.setPosition({ dyno_.getPosition().x, correctedY });
+            moved_ = true;
         }
         else {
-            std::cout << "Skipping position correction to prevent overshoot!" << std::endl;
+            std::cout << "playerY: " << dyno_.getRigid().getY() << ", correctedY: " << correctedY << std::endl;
         }
 
         /*std::cout << "Corrected Y-Position Target: " << cpOut.y - (dyno_.BBoxHeight()/2.f)-1.f << std::endl;
@@ -381,7 +383,7 @@ void Physics::DynoVsTiles(DynamicObject& dyno_, std::vector<Tile*>& s_, sf::Vect
 
   
     if (dyno_.getVelocity().y == 0 && strongestNormal.y < 0) {
-        float correctedY = cpOut.y - dyno_.BBoxHeight();
+        float correctedY = CurrTile->getPosition().y - dyno_.BBoxHeight();
 
         // 🚀 Add a small buffer zone to prevent constant correction
         if (std::abs(dyno_.getPosition().y - correctedY) > 0.05f) {
@@ -389,10 +391,6 @@ void Physics::DynoVsTiles(DynamicObject& dyno_, std::vector<Tile*>& s_, sf::Vect
             dyno_.setPosition({ dyno_.getPosition().x, correctedY - 0.1f });
         }
     }
-
-
-
-    moved_ = true;
 }
 
 bool Physics::DynoVsDyno(DynamicObject& dyno_, DynamicObject& dyno2_, sf::Vector2f& cp_, sf::Vector2f& cn_, sf::Vector2f& ct_, float gameTime_)
