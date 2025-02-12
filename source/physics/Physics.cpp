@@ -33,6 +33,13 @@ bool Physics::RayVsBBox(sf::Vector2f rayOrigin_, sf::Vector2f rayDir_, const Bou
     if (tNear.x > tFar.y || tNear.y > tFar.x) { return false; }
 
     ct_ = std::max(tNear.x, tNear.y);
+
+    std::cout << "tNear.x: " << tNear.x << " | tNear.y: " << tNear.y << std::endl;
+    std::cout << "tFar.x: " << tFar.x << " | tFar.y: " << tFar.y << std::endl;
+    std::cout << "Raw ct_: " << ct_ << std::endl;
+
+
+
     float tHitFar = std::min(tFar.x, tFar.y);
 
 
@@ -40,28 +47,39 @@ bool Physics::RayVsBBox(sf::Vector2f rayOrigin_, sf::Vector2f rayDir_, const Bou
 
     cp_ = { rayOrigin_.x + ct_ * rayDir_.x, rayOrigin_.y + ct_ * rayDir_.x };
 
+    sf::Vector2f normalX = { 0.f, 0.f };
+    sf::Vector2f normalY = { 0.f, 0.f };
+
+
+
     if (tNear.x > tNear.y)
     {
         if (rayDir_.x < 0)
         {
-            cn_ = {1.f,0.f};
+            normalX = {1.f,0.f};
         }
         else
         {
-            cn_ = { -1.f,0.f };
+            normalX = { -1.f,0.f };
         }
     }
     else if (tNear.x < tNear.y)
     {
         if (rayDir_.y < 0)
         {
-            cn_ = { 0.f,1.f };
+            normalY = { 0.f,1.f };
         }
         else
         {
-            cn_ = { 0.f,-1.f };
+            normalY = { 0.f,-1.f };
         }
     }
+
+    cn_ = {normalX.x, normalY.y};
+
+
+    
+
     return true;
 }
 
@@ -136,9 +154,26 @@ bool Physics::DynoVsStatic(DynamicObject& dyno_, StaticObject& s_, sf::Vector2f&
     BoundingBox rBox{ w,h,0.f,0.f };
     // 
       // { dyno_.getVelocity().x* gameTime_, dyno_.getVelocity().y }
-
-    if (RayVsBBox({ dyno_.getPosition().x + dyno_.getBBoxSize().x / 2.f, dyno_.getPosition().y + dyno_.getBBoxSize().y / 2.f }, { dyno_.getVelocity().x * gameTime_, dyno_.getVelocity().y * gameTime_ }, rBox, { expanded_target.x, expanded_target.y }, cp_, cn_, ct_))
+    sf::Vector2f rayDir_ = { dyno_.getVelocity().x * gameTime_, dyno_.getVelocity().y * gameTime_ };
+    if (RayVsBBox({ dyno_.getPosition().x + dyno_.getBBoxSize().x / 2.f, dyno_.getPosition().y + dyno_.getBBoxSize().y / 2.f }, rayDir_, rBox, { expanded_target.x, expanded_target.y }, cp_, cn_, ct_))
     {
+        if (cn_.x == 1.f)
+        {
+            int i = 0;
+
+        }
+        std::cout << "Before correction, ct_: " << ct_ << std::endl;
+        if (ct_ > 0) {
+            float correction = (dyno_.BBoxWidth() / 4) / std::max(std::abs(rayDir_.x), 10.0f);
+            if (correction < ct_) {
+                ct_ -= correction;
+            }
+            else {
+                ct_ = 0.01f;
+            }
+        }
+        std::cout << "After correction, ct_: " << ct_ << std::endl;
+
         if (ct_ <= 1.0f)
         {
             return true;
@@ -259,10 +294,10 @@ bool Physics::DynoVsStatic(DynamicObject& dyno_, StaticObject& s_, sf::Vector2f&
 //    }
 //}
 
-void Physics::DynoVsTiles(DynamicObject& dyno_, std::vector<Tile*>& s_, sf::Vector2f& cp_, sf::Vector2f& cn_, float& ct_, float gameTime_, bool& moved_)
+void Physics::DynoVsTiles(DynamicObject& dyno_, std::vector<Tile*>& s_, sf::Vector2f& cp_, sf::Vector2f& cn_, float& ct_, float gameTime_, bool& movedx_, bool& movedy_)
 {
     collisions.clear();
-    moved_ = false;
+    movedy_ = false;
     sf::Vector2f cp{}, cn{};
     float ct{1.f};
     // Collect collision candidates
@@ -306,6 +341,10 @@ void Physics::DynoVsTiles(DynamicObject& dyno_, std::vector<Tile*>& s_, sf::Vect
 
         sf::Vector2f moveDir = dyno_.getVelocity();
         float length = std::sqrt(moveDir.x * moveDir.x + moveDir.y * moveDir.y);
+        if (dyno_.getVelocity().x != 0)
+        {
+            int i = 0;
+        }
         if (length > 0.0f) {
             moveDir /= length;  // Normalize the movement direction
         }
@@ -363,7 +402,7 @@ void Physics::DynoVsTiles(DynamicObject& dyno_, std::vector<Tile*>& s_, sf::Vect
         float correctedY = CurrTile->getPosition().y - dyno_.BBoxHeight() / 2.f;
         if (dyno_.getPosition().y > correctedY) {
             dyno_.setPosition({ dyno_.getPosition().x, correctedY });
-            moved_ = true;
+            movedy_ = true;
         }
         else {
             std::cout << "playerY: " << dyno_.getRigid().getY() << ", correctedY: " << correctedY << std::endl;
@@ -374,8 +413,26 @@ void Physics::DynoVsTiles(DynamicObject& dyno_, std::vector<Tile*>& s_, sf::Vect
         dyno_.setPosition({ dyno_.getPosition().x, cpOut.y - (dyno_.BBoxHeight() / 2.f) - 1.f });
         std::cout << "Applying ground collision resolution!" << std::endl;*/
     }
+    // 🚀 🚀 🚀 NEW CODE TO FIX WALL CLIMBING 🚀 🚀 🚀
     if (strongestNormal.x != 0) { // Hitting a wall
+        std::cout << "Applying wall collision resolution!" << std::endl;
         newVelocity.x = 0;
+        movedx_ = true;
+
+        // 🚀 NEW: Fix for getting stuck inside the wall
+        float correctedX = (strongestNormal.x > 0) ?
+            CurrTile->getPosition().x + CurrTile->getSize().x :
+            CurrTile->getPosition().x - dyno_.BBoxWidth() / 2.f;
+
+        if ((strongestNormal.x > 0 && dyno_.getPosition().x < correctedX) ||
+            (strongestNormal.x < 0 && dyno_.getPosition().x > correctedX)) {
+            dyno_.setPosition({ correctedX, dyno_.getPosition().y });
+        }
+
+        // Ensure Y correction doesn’t happen if colliding with a wall
+        if (std::abs(strongestNormal.y) < 0.001f) {
+            std::cout << "Wall Collision: Stopping X movement without Y correction." << std::endl;
+        }
     }
 
     std::cout << "New Velocity Being Set: " << newVelocity.x << ", " << newVelocity.y << std::endl;
